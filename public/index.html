@@ -9,6 +9,19 @@
   <meta property="og:description" content="Sample application that shows how to use the Watson Assistant API to identify user intents" />
   <link rel="shortcut icon" href="favicon.png" type="image/png">
   <link rel="stylesheet" href="css/app.css">
+  <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
 </head>
 
 <body>
@@ -26,29 +39,110 @@
             autofocus>
         </label>
         <div class="disclaimer">
-          * This system is for demonstration purposes only and is not intended to process Personal Data. No Personal
-          Data is to be entered
-          into this system as it may not have the necessary controls in place to meet the requirements of the General
-          Data Protection
-          Regulation (EU) 2016/679.
         </div>
         <div class="disclaimer">
-          By using this application, you agree to the&nbsp;
+          
           <a target="_blank" rel="noreferrer noopener" href="https://watson-developer-cloud.github.io/terms?name=Watson%20Assistant%20Demo">
-            Terms of Use
+            
           </a>
         </div>
       </div>
     </div>
-    <div id="payload-column" class="fixed-column content-column">
+	
+    <div id="payload-column" class="fixed-column content-column" style="display:none">
       <div id="payload-initial-message">
         Type something to see the output
       </div>
-      <div id="payload-request" class="payload"></div>
-      <div id="payload-response" class="payload"></div>
+      <div id="payload-request" class="payload" style="display:none"></div>
+      <div id="payload-response" class="payload" style="display:none"></div>
     </div>
   </div>
+  <div id="map" style="background-color:black"></div>
+  <script>
+      // This example creates circles on the map, representing populations in North
+      // America.
 
+      // First, create an object containing LatLng and population for each city.
+      var citymap = {
+        chicago: {
+          center: {lat: 15.3578717, lng: 73.9430603},
+          population: 27
+        },
+        newyork: {
+          center: {lat: 15.3698720, lng: 73.9418603},
+          population: 27
+        },
+        losangeles: {
+          center: {lat: 15.3598717, lng: 73.9318613},
+          population: 27
+        },
+        vancouver: {
+          center: {lat: 15.368917, lng: 73.9518603},
+          population: 27
+        }
+      };
+	 
+		
+      function initMap(lati, lon) {
+        // Create the map.
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 14,
+          center: {lat: 15.3598717, lng: 73.9430603},
+          mapTypeId: 'terrain'
+        });
+		
+		var marker = new google.maps.Marker({
+       position: citymap.losangeles.center,
+      map: map,
+    title: 'Wellness'
+     });
+	 
+	 var marker1 = new google.maps.Marker({
+       position: citymap.vancouver.center,
+      map: map,
+    title: 'Med Camp'
+     });
+	 
+	 var marker2 = new google.maps.Marker({
+       position: citymap.newyork.center,
+      map: map,
+    title: 'Medicine World'
+     });
+	 
+	 var marker3 = new google.maps.Marker({
+       position: citymap.chicago.center,
+      map: map,
+    title: 'You are here!'
+     });
+	 
+	 var marker4 = new google.maps.Marker({
+       position: map.center,
+      map: map,
+    title: 'Pharma Plus'
+     });
+
+
+        // Construct the circle for each value in citymap.
+        // Note: We scale the area of the circle based on the population.
+        for (var city in citymap) {
+          // Add the circle for this city to the map.
+          var cityCircle = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35,
+            map: map,
+            center: citymap[city].center,
+            radius: Math.sqrt(citymap[city].population) * 100
+          });
+        }
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSSaWO6qUeavn2zMH0f7KSdj_AKS94FxM&callback=initMap">
+    </script>
+   
   <script src="js/common.js"></script>
   <script src="js/api.js"></script>
   <script src="js/conversation.js"></script>
